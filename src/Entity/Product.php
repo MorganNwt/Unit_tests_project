@@ -33,11 +33,11 @@ class Product
         return $this->price * 0.196;
     }
 
+    // Méthode pour vérifier que le prix n'est pas négatif avant de calculer la TVA
     public function computeNegativeTVA()
     {
         if ($this->price < 0) {
             throw new Exception('The TVA cannot be negative.');
         }
     }
-    
 }

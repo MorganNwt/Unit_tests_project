@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    const MAX_ADVICED_DAILY_CALORIES = 2500;
+    public const MAX_ADVICED_DAILY_CALORIES = 2500;
 
     /**
      * @ORM\Column(type="integer")
@@ -46,81 +44,59 @@ class User implements UserInterface
      */
     private string $profileHtmlUrl;
 
-    #[Pure]
-    public function __construct($username, $fullname, $email, $avatarUrl, $profileHtmlUrl)
-    {
+    public function __construct(
+        string $username,
+        string $fullname,
+        string $email,
+        string $avatarUrl,
+        string $profileHtmlUrl
+    ) {
         $this->username = $username;
         $this->fullname = $fullname;
         $this->email = $email;
         $this->avatarUrl = $avatarUrl;
         $this->profileHtmlUrl = $profileHtmlUrl;
-        $this->foodRecords = new ArrayCollection();
     }
 
-    /**
-     * @return mixed
-     */
     public function getId(): mixed
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUsername(): mixed
     {
         return $this->username;
     }
 
-    /**
-     * @return mixed
-     */
     public function getFullname(): mixed
     {
         return $this->fullname;
     }
 
-    /**
-     * @return mixed
-     */
     public function getEmail(): mixed
     {
         return $this->email;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAvatarUrl(): mixed
     {
         return $this->avatarUrl;
     }
 
-    /**
-     * @return mixed
-     */
     public function getProfileHtmlUrl(): mixed
     {
         return $this->profileHtmlUrl;
     }
 
-
-    /**
-     * @return string[]
-     */
     public function getRoles(): array
     {
         return ['ROLE_USER'];
     }
 
-    public function eraseCredentials(): void
-    {
-        // clear temporary sensitive data here if needed
-    }
+    public function eraseCredentials(): void {}
 
     public function getUserIdentifier(): string
     {
-        return '';
+        return $this->username;
     }
 }

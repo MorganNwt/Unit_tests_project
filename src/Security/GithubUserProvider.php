@@ -3,18 +3,18 @@
 namespace App\Security;
 
 use App\Entity\User;
-use GuzzleHttp\Client;
-use JMS\Serializer\Serializer;
+use GuzzleHttp\ClientInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class GithubUserProvider implements UserProviderInterface
 {
-    private Client $client;
-    private Serializer $serializer;
+    private ClientInterface $client;
+    private SerializerInterface $serializer;
 
-    public function __construct(Client $client, Serializer $serializer)
+    public function __construct(ClientInterface $client, SerializerInterface $serializer)
     {
         $this->client = $client;
         $this->serializer = $serializer;
@@ -22,7 +22,7 @@ class GithubUserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $response = $this->client->get('https://api.github.com/user?access_token=' . $identifier);
+        $response = $this->client->request('GET', 'https://api.github.com/user?access_token=' . $identifier);
         $result = $response->getBody()->getContents();
         $userData = $this->serializer->deserialize($result, 'array', 'json');
 
@@ -50,6 +50,6 @@ class GithubUserProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return $class === User::class;
+        return User::class === $class;
     }
 }
